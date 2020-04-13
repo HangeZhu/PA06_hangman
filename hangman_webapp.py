@@ -26,6 +26,7 @@ def play():
 	return render_template("start.html",state=state)
 
 @app.route('/play',methods=['GET','POST'])
+
 def hangman():
 	""" plays hangman game """
 	global state
@@ -33,12 +34,7 @@ def hangman():
 		return play()
 
 	elif request.method == 'POST':
-		letter = request.form['guess']
-		# check if letter has already been guessed
-		# and generate a response to guess again
-		# else check if letter is in word
-		# then see if the word is complete
-		# if letter not in word, then tell them
+		
 		state['guesses'] += [letter]
 		return render_template('play.html',state=state)
 
