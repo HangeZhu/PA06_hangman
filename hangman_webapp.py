@@ -7,6 +7,8 @@ from flask import Flask, render_template, request
 import hangman_app
 app = Flask(__name__)
 
+def word_so_far(answer, guesses):
+    return str.join('', [x if x in guesses else '_' for x in answer])
 
 global state
 state = {'guesses':[],
@@ -34,47 +36,22 @@ def play():
 
 @app.route('/play',methods=['GET','POST'])
 
+
 def hangman():
-	""" plays hangman game """
-	global state
-	if request.method == 'GET':
-		return play()
+    global state
+    if request.method == 'GET':
+        return play()
 
-	elif request.method == 'POST':
+    elif request.method == 'POST':
+        state['guesses'] += [letter]
+        if letter not in state['word']:
+            state['guesses_left'] -= 1
+            state['word_so_far'] = word_so_far(state['word'], state['guesses'])
+        return render_template('play.html',state=state)
 
-		want_to_play = input("Would you like to play again? y/n")
-        while (want_to_play == 'y'):
-            guessed_letters = []
-            guesses_left = 6
-            word = generate_random_word()
-            print(print_word(word, guessed_letters))
-            done = False
-            while done == False:
-                letter = input("Please select one letter").lower()
-                if letter in guessed_letters:
-                    guesses_left -= 1
-                    print("You have already guessed the letter " + letter)
-                elif letter not in word:
-                    guessed_letters.append(letter)
-                    print("The letter " + letter + " is not in the word.")
-                    guesses_left -= 1
-                    print(print_word(word, guessed_letters))
-                else:
-                    guessed_letters.append(letter)
-                    print("Yes! It is in the word.")
-                    print(print_word(word, guessed_letters))
-
-                if(all(x in set(split(guessed_letters)) for x in set(split(word)))):
-                    print("Congratulations! You win!")
-                    done = True
-                elif guesses_left == 0:
-                    done = True
-                    print("Sorry, your attempts have run out...")
-            want_to_play = input("Would you like to play again? y/n")
-
-		return render_template('play.html',state=state)
-
-
+@app.route('/about')
+def about():
+    return render_template('team_profile.html')
 
 
 if __name__ == '__main__':
