@@ -42,11 +42,6 @@ def hangman():
 
     elif request.method == 'POST':
         letter = request.form['guess']
-        # check if letter has already been guessed
-        # and generate a response to guess again
-        # else check if letter is in word
-        # then see if the word is complete
-        # if letter not in word, then tell them
         state['guesses'] += [letter]
         if letter not in state['word']:
             state['chances_left'] -= 1
@@ -60,4 +55,4 @@ def about():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0',port=3000,debug=True)
+    app.run('0.0.0.0',port=3000)

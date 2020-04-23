@@ -2,18 +2,28 @@
 
 {% block content %}
   <div class="jumbotron">
-    <h1>Hangman</h1>
+    <h1>
+      {% if state['chances_left'] <= 0 %}
+      You Lose!
+      {% elif state['word_so_far'] == state['word'] %}
+      You Win!
+      {% else %}
+      Hangman
+      {% endif %}</h1>
   </div>
-  <p>Here is your word</p>
+  <p>Here is your word</p >
   {{state['word_so_far']}}
+  <p>Chances left:</p >
+  {{state['chances_left']}}
   <form method="post" action="/play">
     Guess a letter: <input type="text" name="guess">
     <br>
     <input type="submit" class="btn btn-lg btn-danger">
   </form>
-  <p>Here are the letters you've guessed already</p>
+  <p>Here are the letters you've guessed already</p >
   {% for x in state['guesses'] %}
    {{x}}
   {% endfor %}
+
 
 {% endblock %}
